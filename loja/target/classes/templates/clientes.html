@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Clientes</title>	
+	<link rel="stylesheet" type "text/css" href="/css/estilo.css">
+</head>
+<body>
+	<div class="margem">
+		<div class="cabecalho">
+			<h1>Clientes</h1>
+		</div>
+		<div th:if="${message} != ''">
+			<div class="row">
+				<div class="col-25"></div>
+				<div class="col-50 mensagem-sucesso">
+					<h3 style="color: white" th:text="${message}"></h3>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-100">
+				<a th:href="@{/novo}"><button id="novo" class="botao">+ Novo Registro</button></a>
+			</div>
+		</div>
+		<div class="container">
+			<table>
+				<thead>
+					<tr>
+						<th style="text-align: center">Id</th>
+						<th style="text-align: center">Nome</th>
+						<th style="text-align: center">Sexo</th>
+						<th style="text-align: center">Email</th>
+						<th style="text-align: center">Civil</th>
+						<th style="text-align: center">Estado</th>
+						<th style="text-align: center">Editar</th>
+						<th style="text-align: center">Excluir</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="cliente : ${clientes}">
+						<td style="text-align: center" th:text="${cliente.id}"></td>
+						<td th:text="${cliente.nome}"></td>
+						<td style="text-align: center" th:text="${cliente.sexo}"></td>
+						<td th:text="${cliente.email}"></td>
+						<td style="text-align: center" th:text="${cliente.civil}"></td>
+						<td style="text-align: center" th:text="${cliente.estado}"></td>
+						<td style="text-align: center"><a th:href="@{/mostrar/{id} (id=${cliente.id})}"/>&#128394;</a>
+						</td>
+						<td style="text-align: center"><a th:href="@{/excluir/{id} (id=${cliente.id})}"
+								onclick="return confirm('Confirma a exclusão do REGISTRO?')">&#128465;</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Clientes</title>
+	<link rel="stylesheet" type="text/css" href="/css/estilo.css">
+
+	<script>
+
+		function limpa_formulário_cep() {
+			//Limpa valores do formulário de cep.
+			document.getElementById('logradouro').value = ("");
+			document.getElementById('bairro').value = ("");
+			document.getElementById('cidade').value = ("");
+			document.getElementById('uf').value = ("");
+		}
+
+		function meu_callback(conteudo) {
+			if (!("erro" in conteudo)) {
+				//Atualiza os campos com os valores.
+				document.getElementById('logradouro').value = (conteudo.logradouro);
+				document.getElementById('bairro').value = (conteudo.bairro);
+				document.getElementById('cidade').value = (conteudo.localidade);
+				document.getElementById('uf').value = (conteudo.uf);
+			} //end if.
+			else {
+				//CEP não Encontrado.
+				limpa_formulário_cep();
+				alert("CEP não encontrado.");
+			}
+		}
+
+		function pesquisacep(valor) {
+
+			//Nova variável "cep" somente com dígitos.
+			var cep = valor.replace(/\D/g, '');
+
+			//Verifica se campo cep possui valor informado.
+			if (cep != "") {
+
+				//Expressão regular para validar o CEP.
+				var validacep = /^[0-9]{8}$/;
+
+				//Valida o formato do CEP.
+				if (validacep.test(cep)) {
+
+					//Preenche os campos com "..." enquanto consulta webservice.
+					document.getElementById('logradouro').value = "...";
+					document.getElementById('bairro').value = "...";
+					document.getElementById('cidade').value = "...";
+					document.getElementById('uf').value = "...";
+
+					//Cria um elemento javascript.
+					var script = document.createElement('script');
+
+					//Sincroniza com o callback.
+					script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+
+					//Insere script no documento e carrega o conteúdo.
+					document.body.appendChild(script);
+
+				} //end if.
+				else {
+					//cep é inválido.
+					limpa_formulário_cep();
+					alert("Formato de CEP inválido.");
+				}
+			} //end if.
+			else {
+				//cep sem valor, limpa formulário.
+				limpa_formulário_cep();
+			}
+		};
+
+	</script>
+</head>
+
+<body>
+	<div class="margem">
+		<div class="cabecalho">
+			<h1>Cliente</h1>
+		</div>
+		<div class="container">
+			<form th:object="${cliente}" th:action="@{/salvar}" method="post">
+				<input type="hidden" th:field="*{id}" />
+				<div class="row">
+					<div class="col-25">
+						<label for="nome">Nome</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="nome" th:field="*{nome}" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-25">
+						<label>Sexo</label>
+					</div>
+					<div class="col-75 boxBackground">
+						<input type="radio" id="masculino" name="sexo" th:value="M" th:checked="*{sexo} == 'M'" />
+						<label for="masculino">Masculino</label><br>
+						<input type="radio" id="feminino" name="sexo" th:value="F" th:checked="*{sexo} == 'F'" />
+						<label for="feminino">Feminino</label><br>
+					</div>
+				</div>
+
+
+
+				<div class="row">
+					<div class="col-25">
+						<label for="email">Email</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="email" th:field="*{email}" />
+					</div>
+				</div>
+
+
+
+				<div class="row">
+					<div class="col-25">
+						<label>Civil</label>
+					</div>
+					<div class="col-75 boxBackground">
+						<input type="radio" id="solteiro" name="civil" th:value="'Solteiro(a)'"
+							th:checked="*{civil == 'Solteiro(a)'}" />
+						<label for="solteiro">Solteiro(a)</label><br>
+						<input type="radio" id="casado" name="civil" th:value="'Casado(a)'"
+							th:checked="*{civil == 'Casado(a)'}" />
+						<label for="casado">Casado(a)</label><br>
+						<input type="radio" id="divorciado" name="civil" th:value="'Divorciado(a)'"
+							th:checked="*{civil == 'Divorciado(a)'}" />
+						<label for="divorciado">Divorciado(a)</label><br>
+						<input type="radio" id="viuvo" name="civil" th:value="'Viúvo(a)'"
+							th:checked="*{civil == 'Viúvo(a)'}" />
+						<label for="viuvo">Viúvo(a)</label><br>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-25">
+						<label>Estado</label>
+					</div>
+					<div class="col-75 boxBackground">
+						<select id="estado" name="estado">
+							<option value="" th:selected="${estado == ''}">Selecione um estado</option>
+							<option value="AC" th:selected="*{estado == 'AC'}">Acre</option>
+							<option value="AL" th:selected="*{estado == 'AL'}">Alagoas</option>
+							<option value="AP" th:selected="*{estado == 'AP'}">Amapá</option>
+							<option value="AM" th:selected="*{estado == 'AM'}">Amazonas</option>
+							<option value="BA" th:selected="*{estado == 'BA'}">Bahia</option>
+							<option value="CE" th:selected="*{estado == 'CE'}">Ceará</option>
+							<option value="DF" th:selected="*{estado == 'DF'}">Distrito Federal</option>
+							<option value="ES" th:selected="*{estado == 'ES'}">Espírito Santo</option>
+							<option value="GO" th:selected="*{estado == 'GO'}">Goiás</option>
+							<option value="MA" th:selected="*{estado == 'MA'}">Maranhão</option>
+							<option value="MT" th:selected="*{estado == 'MT'}">Mato Grosso</option>
+							<option value="MS" th:selected="*{estado == 'MS'}">Mato Grosso do Sul</option>
+							<option value="MG" th:selected="*{estado == 'MG'}">Minas Gerais</option>
+							<option value="PA" th:selected="*{estado == 'PA'}">Pará</option>
+							<option value="PB" th:selected="*{estado == 'PB'}">Paraíba</option>
+							<option value="PR" th:selected="*{estado == 'PR'}">Paraná</option>
+							<option value="PE" th:selected="*{estado == 'PE'}">Pernambuco</option>
+							<option value="PI" th:selected="*{estado == 'PI'}">Piauí</option>
+							<option value="RJ" th:selected="*{estado == 'RJ'}">Rio de Janeiro</option>
+							<option value="RN" th:selected="*{estado == 'RN'}">Rio Grande do Norte</option>
+							<option value="RS" th:selected="*{estado == 'RS'}">Rio Grande do Sul</option>
+							<option value="RO" th:selected="*{estado == 'RO'}">Rondônia</option>
+							<option value="RR" th:selected="*{estado == 'RR'}">Roraima</option>
+							<option value="SC" th:selected="*{estado == 'SC'}">Santa Catarina</option>
+							<option value="SP" th:selected="*{estado == 'SP'}">São Paulo</option>
+							<option value="SE" th:selected="*{estado == 'SE'}">Sergipe</option>
+							<option value="TO" th:selected="*{estado == 'TO'}">Tocantins</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-25">
+						<label for="email">Cep</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="cep" th:field="*{cep}" onblur="pesquisacep(this.value);"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-25">
+						<label for="email">Logradouro</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="logradouro" th:field="*{logradouro}" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-25">
+						<label for="email">Bairro</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="bairro" th:field="*{bairro}" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-25">
+						<label for="email">Cidade</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="cidade" th:field="*{cidade}" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-25">
+						<label for="email">UF</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="uf" th:field="*{uf}" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-100">
+						<input type="submit" value="Salvar">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div style="text-align: center;">
+		<a th:href="@{/}">Listar Clientes</a>
+	</div>
+</body>
+
+</html>

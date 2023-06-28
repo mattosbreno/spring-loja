@@ -1,0 +1,49 @@
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Clientes</title>
+	<link rel="stylesheet" type="text/css" href="/css/estilo.css">
+</head>
+
+<body>
+	<div class="margem">
+		<div class="cabecalho">
+			<h1>Login</h1>
+		</div>
+		<div class="container">
+			<form th:action="@{/login}" method="post">
+				<div class="row">
+					<div class="col-25">
+						<label for="username">Nome</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="username" name="username" required="required" />
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-25">
+						<label for="password">Senha</label>
+					</div>
+					<div class="col-75">
+						<input type="text" id="password" name="password" required="required" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-100">
+						<input type="submit" value="Entrar">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div style="text-align: center;">
+		<a th:href="@{/}">Listar Clientes</a>
+	</div>
+</body>
+
+</html>
